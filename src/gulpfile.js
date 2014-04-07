@@ -5,15 +5,23 @@ var gulp = require( 'gulp' ),
 	jshint = require( 'gulp-jshint' ),
 	uglify = require( 'gulp-uglify' ),
 	sass = require( 'gulp-sass' ),
-	imagemin = require( 'gulp-imagemin' );
+	imagemin = require( 'gulp-imagemin' ),
+	concat = require('gulp-concat'),
+	minifyCSS = require('gulp-minify-css'),
+	runSequence = require('run-sequence'),
+	minifyHTML = require('gulp-minify-html'),
+	prefix = require('gulp-autoprefixer'),
+	clean = require('gulp-clean');
 
 // Sets assets folders.
 var dirs = {
-	js: '../assets/js',
-	css: '../assets/css',
-	sass: '../assets/sass',
-	images: '../assets/images',
-	fonts: '../assets/fonts'
+	srcDir : 'assets',
+	destDir : '../assets',
+	js: '/js',
+	css: '/css',
+	sass: '/sass',
+	images: '/images',
+	fonts: '/fonts'
 };
 
 gulp.task( 'scripts', function () {
