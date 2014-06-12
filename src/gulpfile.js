@@ -15,25 +15,28 @@ var gulp = require( 'gulp' ),
 
 // Sets assets folders.
 var dirs = {
-	srcDir : 'assets',
-	destDir : '../assets',
-	js: '/js',
-	css: '/css',
+	dest : {
+		dir : '../',
+		js : '../js/scripts/',
+		jsLib : '../js/libs/',
+		css : '../css/',
+		img : '../img/',
+		fonts : '../fonts/',
+	},
+	js: '/js/scripts/',
+	jsLib: '/js/libs',
 	sass: '/sass',
-	images: '/images',
+	images: '/img',
 	fonts: '/fonts'
 };
 
 gulp.task( 'scripts', function () {
 	// Hint all JavaScript.
-	gulp.src( dirs.js + '/client/*.js' )
+	gulp.src( dirs.js + '/*.js' )
 		.pipe( jshint() )
-		.pipe( jshint.reporter( 'default' ) );
-
-	// Minify and copy all JavaScript.
-	gulp.src( dirs.js + '/client/*.js' )
+		.pipe( jshint.reporter( 'default' ) )
 		.pipe( uglify() )
-		.pipe( gulp.dest( dirs.js + '/build' ) );
+		.pipe( gulp.dest(dirs.js));
 });
 
 gulp.task( 'sass', function () {
@@ -52,22 +55,13 @@ gulp.task( 'optimize', function () {
 			optimizationLevel: 7,
 			progressive: true
 		}) )
-		.pipe( gulp.dest( dirs.images ) );
+		.pipe( gulp.dest( dirs.dest.images ) );
 });
 
 gulp.task( 'watch', function () {
-	// Watch JavaScript changes.
-	gulp.watch( dirs.js + '/client/*.js', function () {
-		gulp.run( 'scripts' );
-	});
 
-	// Watch SCSS changes.
-	gulp.watch( dirs.sass + '/*.scss', function () {
-		gulp.run( 'sass' );
-	});
 });
 
 gulp.task( 'default', function () {
-	// Compile all assets.
 	gulp.run( 'scripts', 'sass' );
 });
