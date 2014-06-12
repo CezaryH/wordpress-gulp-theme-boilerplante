@@ -2,16 +2,7 @@
 
 // Include project requirements.
 var gulp = require( 'gulp' ),
-	jshint = require( 'gulp-jshint' ),
-	uglify = require( 'gulp-uglify' ),
-	sass = require( 'gulp-sass' ),
-	imagemin = require( 'gulp-imagemin' ),
-	concat = require('gulp-concat'),
-	minifyCSS = require('gulp-minify-css'),
-	runSequence = require('run-sequence'),
-	minifyHTML = require('gulp-minify-html'),
-	prefix = require('gulp-autoprefixer'),
-	clean = require('gulp-clean');
+	plugins = require('gulp-load-plugins')({ camelize: true });
 
 // Sets assets folders.
 var dirs = {
@@ -33,16 +24,16 @@ var dirs = {
 gulp.task( 'scripts', function () {
 	// Hint all JavaScript.
 	gulp.src( dirs.js + '/*.js' )
-		.pipe( jshint() )
-		.pipe( jshint.reporter( 'default' ) )
-		.pipe( uglify() )
+		.pipe( plugins.jshint() )
+		.pipe( plugins.jshint.reporter( 'default' ) )
+		.pipe( plugins.uglify() )
 		.pipe( gulp.dest(dirs.js));
 });
 
 gulp.task( 'sass', function () {
 	// Compile all SCSS files.
 	gulp.src( dirs.sass + '/*.scss' )
-		.pipe( sass({
+		.pipe( plugins.sass({
 			outputStyle: 'compressed'
 		}) )
 		.pipe( gulp.dest( dirs.css ) );
@@ -51,7 +42,7 @@ gulp.task( 'sass', function () {
 gulp.task( 'optimize', function () {
 	// Optimize all images.
 	gulp.src( dirs.images + '/*.{png,jpg,gif}' )
-		.pipe( imagemin({
+		.pipe( plugins.imagemin({
 			optimizationLevel: 7,
 			progressive: true
 		}) )
