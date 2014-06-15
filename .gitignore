@@ -3,3 +3,5 @@ src/.sass-cache/
 assets/css/
 assets/js/build/
 src/bower_components/
+js/
+css/
