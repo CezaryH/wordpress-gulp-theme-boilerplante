@@ -7,12 +7,12 @@ var gulp = require( 'gulp' ),
 // Sets assets folders.
 var dirs = {
 	dest : {
-		dir : '../',
-		js : '../js/scripts/',
-		jsLib : '../js/libs/',
-		css : '../css/',
-		img : '../img/',
-		fonts : '../fonts/',
+		dir : '../dist/',
+		js : '../dist/js/scripts/',
+		jsLib : '../dist/js/libs/',
+		css : '../dist/css/',
+		img : '../dist/img/',
+		fonts : '../dist/fonts/',
 	},
 	js: './js/scripts/',
 	jsLib: './js/libs',
@@ -23,7 +23,16 @@ var dirs = {
 	controllers : './controllers'
 };
 
-gulp.task( 'sass', function () {
+gulp.task('clean', function () {
+    // Clear the destination folder
+    gulp.src([
+		dirs.dest.dir + '/**/*.*',
+		'../*.php'
+	], { read: false })
+    .pipe(clean({ force: true }));
+});
+
+gulp.task( 'css', function () {
 	// Compile all SCSS files.
 	
 	return gulp.src( dirs.sass + '/*.scss' )
@@ -37,8 +46,27 @@ gulp.task( 'sass', function () {
 });
 
 gulp.task("bower-files", function(){
+	var jsFilter = p.filter('**/*.js'),
+		sassFilter = p.filter('**/*.scss'),
+		fontsFilter = p.filter('fonts/*.*');
+
     return p.bowerFiles()
-    	.pipe(gulp.dest(dirs.dest.jsLib));
+		.pipe(jsFilter)
+		.pipe(p.concat("vendor.js"))
+		.pipe( p.uglify() )
+    	.pipe(gulp.dest(dirs.dest.jsLib))
+		.pipe(jsFilter.restore())
+ 		.pipe(sassFilter)
+		.pipe(p.debug())
+		.pipe(p.sass({
+			outputStyle: 'compressed',
+			includePaths : ['./bower_components/bootstrap-sass-official/vendor/assets/stylesheets']
+		}))
+		.pipe(p.debug())
+		.pipe(gulp.dest(dirs.dest.css))
+		.pipe(sassFilter.restore())
+		.pipe(fontsFilter)
+		.pipe(gulp.dest(dirs.dest.fonts));
 });
 
 gulp.task( 'scripts', function () {
@@ -55,17 +83,17 @@ gulp.task('html', ['styles', 'scripts'], function () {
     var cssFilter = $.filter('**/*.css');
 
     return gulp.src([dirs.controllers, dire.views])
-        .pipe($.useref.assets())
+        .pipe(p.useref.assets())
         .pipe(jsFilter)
-        .pipe($.uglify())
+        .pipe(p.uglify())
         .pipe(jsFilter.restore())
         .pipe(cssFilter)
-        .pipe($.csso())
+        .pipe(p.csso())
         .pipe(cssFilter.restore())
-        .pipe($.useref.restore())
-        .pipe($.useref())
+        .pipe(p.useref.restore())
+        .pipe(p.useref())
         .pipe(gulp.dest('dist'))
-        .pipe($.size());
+        .pipe(p.size());
 });
 
 gulp.task( 'optimize', function () {
@@ -82,6 +110,5 @@ gulp.task( 'watch', function () {
 
 });
 
-gulp.task( 'default', function () {
-	gulp.run( 'scripts', 'sass' );
-});
+
+

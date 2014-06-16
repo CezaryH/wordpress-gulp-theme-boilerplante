@@ -14,7 +14,18 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap-sass-official": "~3.1.1+2",
+    "bootstrap-sass-official": "*",
     "jQuery": "~2.1.1"
+  },
+  "overrides" : {
+	"bootstrap-sass" : { 
+		"main" : [
+			"vendor/assets/stylesheets/bootstrap.scss",
+			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.eot",
+			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.svg",
+			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf",
+			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.woff" 			
+		]
+	}
   }
 }
