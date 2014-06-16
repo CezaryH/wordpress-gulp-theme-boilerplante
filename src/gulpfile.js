@@ -63,6 +63,7 @@ gulp.task("bower-files", function(){
 			includePaths : ['./bower_components/bootstrap-sass-official/vendor/assets/stylesheets']
 		}))
 		.pipe(p.debug())
+		.pipe(p.autoprefixer())
 		.pipe(gulp.dest(dirs.dest.css))
 		.pipe(sassFilter.restore())
 		.pipe(fontsFilter)
