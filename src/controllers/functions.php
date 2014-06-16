@@ -1,37 +1,52 @@
 <?php
+	
+	if (!class_exists('Timber')){
+		echo 'Timber not activated. Make sure you activate the plugin in <a href="/wp-admin/plugins.php#timber">/wp-admin/plugins.php</a>';
+		return;
+	}
 
-/**
- * Load site scripts.
- *
- * @since  1.0.0
- *
- * @return void
- */
-function wpgulp_enqueue_scripts() {
-	// Loads Odin main stylesheet.
-	wp_enqueue_style( 'wpgulp-style', get_stylesheet_uri(), array(), null, 'all' );
+	class StarterSite extends TimberSite {
 
-	// jQuery.
-	wp_enqueue_script( 'jquery' );
+		function __construct(){
+			add_theme_support('post-formats');
+			add_theme_support('post-thumbnails');
+			add_theme_support('menus');
+			add_filter('timber_context', array($this, 'add_to_context'));
+			add_filter('get_twig', array($this, 'add_to_twig'));
+			add_action('init', array($this, 'register_post_types'));
+			add_action('init', array($this, 'register_taxonomies'));
+			parent::__construct();
+		}
 
-	// Theme scripts.
-	wp_enqueue_script( 'wpgulp-main-min', get_template_directory_uri() . '/assets/js/build/main.js', array(), null, true );
-}
+		function register_post_types(){
+			//this is where you can register custom post types
+		}
 
-add_action( 'wp_enqueue_scripts', 'wpgulp_enqueue_scripts', 1 );
+		function register_taxonomies(){
+			//this is where you can register custom taxonomies
+		}
 
-/**
- * Custom stylesheet URI.
- *
- * @since  1.0.0
- *
- * @param  string $uri Default URI.
- * @param  string $dir Stylesheet directory URI.
- *
- * @return string      New URI.
- */
-function wpgulp_stylesheet_uri( $uri, $dir ) {
-	return $dir . '/assets/css/style.css';
-}
+		function add_to_context($context){
+			$context['foo'] = 'bar';
+			$context['stuff'] = 'I am a value set in your functions.php file';
+			$context['notes'] = 'These values are available everytime you call Timber::get_context();';
+			$context['menu'] = new TimberMenu();
+			$context['site'] = $this;
+			return $context;
+		}
 
-add_filter( 'stylesheet_uri', 'wpgulp_stylesheet_uri', 10, 2 );
+		function add_to_twig($twig){
+			/* this is where you can add your own fuctions to twig */
+			$twig->addExtension(new Twig_Extension_StringLoader());
+			$twig->addFilter('myfoo', new Twig_Filter_Function('myfoo'));
+			return $twig;
+		}
+
+	}
+
+	new StarterSite();
+
+	function myfoo($text){
+    	$text .= ' bar!';
+    	return $text;
+	}
