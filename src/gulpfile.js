@@ -2,25 +2,27 @@
 
 // Include project requirements.
 var gulp = require( 'gulp' ),
+	jshintStylish = require('jshint-stylish'),
 	p = require('gulp-load-plugins')();
 
 // Sets assets folders.
 var dirs = {
 	dest : {
 		dir : '../dist/',
-		js : '../dist/js/scripts/',
+		js : '../dist/js/',
 		jsLib : '../dist/js/libs/',
 		css : '../dist/css/',
 		img : '../dist/img/',
 		fonts : '../dist/fonts/',
+		views : '../dist/views/'
 	},
 	js: './js/scripts/',
-	jsLib: './js/libs',
-	sass: './sass',
-	images: './img',
-	fonts: './fonts',
+	jsLib: './js/libs/',
+	sass: './sass/',
+	images: './img/',
+	fonts: './fonts/',
 	views : './views/',
-	controllers : './controllers'
+	controllers : './controllers/'
 };
 
 gulp.task('clean', function () {
@@ -48,7 +50,7 @@ gulp.task( 'css', function () {
 gulp.task("bower-files", function(){
 	var jsFilter = p.filter('**/*.js'),
 		sassFilter = p.filter('**/*.scss'),
-		fontsFilter = p.filter('fonts/*.*');
+		fontsFilter = p.filter('**/fonts/*.*');
 
     return p.bowerFiles()
 		.pipe(jsFilter)
@@ -59,14 +61,24 @@ gulp.task("bower-files", function(){
  		.pipe(sassFilter)
 		.pipe(p.debug())
 		.pipe(p.sass({
-			outputStyle: 'compressed',
-			includePaths : ['./bower_components/bootstrap-sass-official/vendor/assets/stylesheets']
+			//outputStyle: 'nested', //nested' or 'compressed', 'expanded' and 'compact'
+			//sourceComments: 'map',
+			includePaths : ['./bower_components/bootstrap-sass-official/vendor/assets/stylesheets'],
+			onError: function (error) {
+				p.util.log(p.util.colors.red(error));
+				p.util.beep();
+			},
+			onSuccess: function () {
+				p.util.log(p.util.colors.green('Sass styles compiled successfully.'));
+			}			
 		}))
 		.pipe(p.debug())
 		.pipe(p.autoprefixer())
+		.pipe(p.flatten())
 		.pipe(gulp.dest(dirs.dest.css))
 		.pipe(sassFilter.restore())
 		.pipe(fontsFilter)
+		.pipe(p.debug())
 		.pipe(gulp.dest(dirs.dest.fonts));
 });
 
@@ -74,27 +86,24 @@ gulp.task( 'scripts', function () {
 	// Hint all JavaScript.
 	return gulp.src( dirs.js + '/*.js' )
 		.pipe( p.jshint())
-		.pipe( p.jshint.reporter( p.jshintStylish() ) )
+		.pipe( p.jshint.reporter(jshintStylish) )
 		.pipe( p.uglify())
 		.pipe( gulp.dest(dirs.dest.js));
 });
 
-gulp.task('html', ['styles', 'scripts'], function () {
-    var jsFilter = $.filter('**/*.js');
-    var cssFilter = $.filter('**/*.css');
+gulp.task('html', function () {
+    var phpFilter = p.filter('*.php');
+    var twigFilter = p.filter('*.twig');
 
-    return gulp.src([dirs.controllers, dire.views])
-        .pipe(p.useref.assets())
-        .pipe(jsFilter)
-        .pipe(p.uglify())
-        .pipe(jsFilter.restore())
-        .pipe(cssFilter)
-        .pipe(p.csso())
-        .pipe(cssFilter.restore())
-        .pipe(p.useref.restore())
-        .pipe(p.useref())
-        .pipe(gulp.dest('dist'))
-        .pipe(p.size());
+    return gulp.src([dirs.controllers + '/**/*.php', dirs.views + '/**/*.twig'], {read : false})
+        .pipe(phpFilter)
+        .pipe(p.debug())
+        .pipe(gulp.dest('../'))
+        .pipe(phpFilter.restore())
+        //.pipe(p.debug())
+        .pipe(twigFilter)
+        //.pipe(p.debug())
+        .pipe(gulp.dest(dirs.dest.views));
 });
 
 gulp.task( 'optimize', function () {
