@@ -13,7 +13,7 @@
     "gulp-clean": "*",
     "gulp-concat": "*",
     "gulp-minify-css": "*",
-    "run-sequence": "*",
+    "gulp-run-sequence": "*",
     "gulp-minify-html": "*",
     "gulp-autoprefixer": "0.0.7",
     "bower": "^1.3.5",

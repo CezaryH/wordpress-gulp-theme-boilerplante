@@ -8,7 +8,8 @@ var gulp = require( 'gulp' ),
 // Sets assets folders.
 var dirs = {
 	dest : {
-		dir : '../dist/',
+		dir : '../',
+		dist : '../dist/',
 		js : '../dist/js/',
 		jsLib : '../dist/js/libs/',
 		css : '../dist/css/',
@@ -19,7 +20,7 @@ var dirs = {
 	js: './js/scripts/',
 	jsLib: './js/libs/',
 	sass: './sass/',
-	images: './img/',
+	img: './img/',
 	fonts: './fonts/',
 	views : './views/',
 	controllers : './controllers/'
@@ -28,10 +29,10 @@ var dirs = {
 gulp.task('clean', function () {
     // Clear the destination folder
     gulp.src([
-		dirs.dest.dir + '/**/*.*',
+		dirs.dest.dist,
 		'../*.php'
 	], { read: false })
-    .pipe(clean({ force: true }));
+    .pipe(p.clean({ force: true }));
 });
 
 gulp.task( 'css', function () {
@@ -51,7 +52,8 @@ gulp.task("bower-files", function(){
 	var jsFilter = p.filter('**/*.js'),
 		sassFilter = p.filter('**/*.scss'),
 		fontsFilter = p.filter('**/fonts/*.*');
-
+		
+		
     return p.bowerFiles()
 		.pipe(jsFilter)
 		.pipe(p.concat("vendor.js"))
@@ -78,8 +80,8 @@ gulp.task("bower-files", function(){
 		.pipe(gulp.dest(dirs.dest.css))
 		.pipe(sassFilter.restore())
 		.pipe(fontsFilter)
-		.pipe(p.debug())
-		.pipe(gulp.dest(dirs.dest.fonts));
+		.pipe(gulp.dest(dirs.dest.fonts))
+		.pipe(p.size());
 });
 
 gulp.task( 'scripts', function () {
@@ -88,33 +90,40 @@ gulp.task( 'scripts', function () {
 		.pipe( p.jshint())
 		.pipe( p.jshint.reporter(jshintStylish) )
 		.pipe( p.uglify())
-		.pipe( gulp.dest(dirs.dest.js));
+		.pipe( gulp.dest(dirs.dest.js))
+		.pipe(p.size());
 });
 
-gulp.task('html', function () {
-    var phpFilter = p.filter('*.php');
-    var twigFilter = p.filter('*.twig');
-
-    return gulp.src([dirs.controllers + '/**/*.php', dirs.views + '/**/*.twig'], {read : false})
-        .pipe(phpFilter)
+gulp.task('twig', function () {
+    return gulp.src(dirs.views + '/*.twig')
         .pipe(p.debug())
-        .pipe(gulp.dest('../'))
-        .pipe(phpFilter.restore())
-        //.pipe(p.debug())
-        .pipe(twigFilter)
-        //.pipe(p.debug())
         .pipe(gulp.dest(dirs.dest.views));
 });
 
-gulp.task( 'optimize', function () {
+gulp.task('php', function () {
+    return gulp.src(dirs.controllers + '/*.php')
+        .pipe(p.debug())
+        .pipe(gulp.dest(dirs.dest.dir))
+});
+
+gulp.task( 'img', function () {
 	// Optimize all images.
-	gulp.src( dirs.images + '/*.{png,jpg,gif}' )
+	gulp.src( dirs.img + '/*.{png,jpg,gif}' )
 		.pipe( p.imagemin({
 			optimizationLevel: 7,
 			progressive: true
 		}) )
-		.pipe( gulp.dest( dirs.dest.images ) );
+		.pipe( gulp.dest( dirs.dest.img ) )
+		.pipe(p.size());
 });
+
+gulp.task( 'copy', function () {
+	// copy files
+	gulp.src([dirs.fonts + '/*.*'])
+		.pipe( gulp.dest( dirs.dest.fonts ) );
+});
+
+
 
 gulp.task( 'watch', function () {
 
