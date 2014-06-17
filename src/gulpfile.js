@@ -2,7 +2,8 @@
 
 // Include project requirements.
 var gulp = require( 'gulp' ),
-	jshintStylish = require('jshint-stylish'),
+	//jshintStylish = require('jshint-stylish'),
+	jshintStylish = require('jshint-stylish-ex'),
 	p = require('gulp-load-plugins')();
 
 // Sets assets folders.
@@ -89,7 +90,9 @@ gulp.task( 'scripts', function () {
 	return gulp.src( dirs.js + '/*.js' )
 		.pipe( p.jshint())
 		.pipe( p.jshint.reporter(jshintStylish) )
+		.pipe(p.concat("script.js"))
 		.pipe( p.uglify())
+		.pipe(p.rename({suffix:'.min'}))
 		.pipe( gulp.dest(dirs.dest.js))
 		.pipe(p.size());
 });
