@@ -9,6 +9,13 @@
 		<title>{{wp_title}}</title>
 		<meta name="description" content="{{site.description}}">
 		<link rel="stylesheet" href="{{site.theme.link}}/style.css" type="text/css" media="screen" />
+		<!-- inject:libsCss -->
+		<!-- any *.css files among your sources will go here as: <link rel="stylesheet" href="FILE"> -->
+		<!-- endinject -->
+		
+		<!-- inject:css -->
+		<!-- any *.css files among your sources will go here as: <link rel="stylesheet" href="FILE"> -->
+		<!-- endinject -->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width">
 		{{function('wp_head')}}
