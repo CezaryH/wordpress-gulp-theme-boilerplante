@@ -46,12 +46,11 @@ gulp.task('twig', function () {
 gulp.task('php', function () {
     return gulp.src(dirs.controllers + '/*.php')
         .pipe(p.debug())
-        .pipe(gulp.dest(dirs.dest.dir))
+        .pipe(gulp.dest(dirs.dest.dir));
 });
 
 gulp.task( 'css', function () {
 	// Compile all SCSS files.
-	
 	return gulp.src( dirs.sass + '/*.scss' )
 		.pipe(p.sass({
 			//outputStyle: 'compressed'
@@ -60,7 +59,7 @@ gulp.task( 'css', function () {
 		.pipe(p.autoprefixer())
 		.pipe(p.concat('style.min.css'))
 		.pipe( gulp.dest( dirs.dest.css ) )
-		.pipe(p.size())
+		.pipe(p.size());
 });
 
 gulp.task("bower-files", function(){
@@ -69,7 +68,9 @@ gulp.task("bower-files", function(){
 		fontsFilter = p.filter('**/fonts/*.*');
 
     return p.bowerFiles()
+		.pipe(p.debug())
 		.pipe(jsFilter)
+		.pipe(p.debug())
 		.pipe(p.concat("vendor.js"))
 		.pipe( p.uglify() )
     	.pipe(gulp.dest(dirs.dest.jsLib))
@@ -151,17 +152,19 @@ gulp.task('injectCss', function(){
 });
 
 gulp.task( 'build', function () {
+	//console.log(this, arguments)
 	return p.runSequence(
 		'clean',
-		'php',
-		'twig',
-		'css',
-		'bower-files',
-		'scripts',
-		'img',
-		'copy'
+		['php', 'twig'],
+		['css',	'bower-files','scripts'],
+		'injectJs',
+		'injectCss',
+		['img',	'copy'],
+		function(){
+			p.util.log(p.util.colors.green('----------------- build done -----------------'));
+		}
 	)
 });
 
-
+gulp.task('help', p.taskListing);
 

@@ -6,25 +6,30 @@
     "Cez <cezary.haller@gmail.com>"
   ],
   "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
   "dependencies": {
-    "bootstrap-sass": "*",
+    "bootstrap-sass-official": "*",
     "jQuery": "~1.*"
   },
   "overrides" : {
-	"bootstrap-sass" : { 
+	"bootstrap-sass-official" : { 
 		"main" : [
-			"vendor/assets/stylesheets/bootstrap.scss",
-			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.eot",
-			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.svg",
-			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf",
-			"vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.woff" 			
+    "vendor/assets/stylesheets/bootstrap.scss",
+    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.eot",
+    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.svg",
+    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf",
+    "vendor/assets/fonts/bootstrap/glyphicons-halflings-regular.woff",
+    "vendor/assets/javascripts/bootstrap/affix.js",
+    "vendor/assets/javascripts/bootstrap/alert.js",
+    "vendor/assets/javascripts/bootstrap/button.js",
+    "vendor/assets/javascripts/bootstrap/carousel.js",
+    "vendor/assets/javascripts/bootstrap/collapse.js",
+    "vendor/assets/javascripts/bootstrap/dropdown.js",
+    "vendor/assets/javascripts/bootstrap/tab.js",
+    "vendor/assets/javascripts/bootstrap/transition.js",
+    "vendor/assets/javascripts/bootstrap/scrollspy.js",
+    "vendor/assets/javascripts/bootstrap/modal.js",
+    "vendor/assets/javascripts/bootstrap/tooltip.js",
+    "vendor/assets/javascripts/bootstrap/popover.js"	
 		]
 	}
   }
