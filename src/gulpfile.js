@@ -65,21 +65,20 @@ gulp.task( 'css', function () {
 
 gulp.task("bower-files", function(){
 	var jsFilter = p.filter('**/*.js'),
-		sassFilter = p.filter('**/*.scss'),
+		sassFilter = p.filter('*.scss'),
 		fontsFilter = p.filter('**/fonts/*.*');
 
     return p.bowerFiles()
 		.pipe(jsFilter)
 		.pipe(p.concat("vendor.js"))
 		.pipe( p.uglify() )
-		//.pipe(p.inject(dirs.dest.views+'base.twig', {starttag: '<!-- inject:bowerJS -->'}))
     	.pipe(gulp.dest(dirs.dest.jsLib))
 		.pipe(jsFilter.restore())
  		.pipe(sassFilter)
 		.pipe(p.debug())
 		.pipe(p.sass({
 			//outputStyle: 'nested', //nested' or 'compressed', 'expanded' and 'compact'
-			sourceComments: 'map',
+			//sourceComments: 'map',
 			includePaths : ['./bower_components/bootstrap-sass-official/vendor/assets/stylesheets'],
 			onError: function (error) {
 				p.util.log(p.util.colors.red(error));
@@ -92,7 +91,7 @@ gulp.task("bower-files", function(){
 		.pipe(p.debug())
 		.pipe(p.autoprefixer())
 		.pipe(p.flatten())
-		//.pipe(p.inject(dirs.dest.views+'html-header.twig', {starttag: '<!-- inject:bower:css -->'}))
+		.pipe(p.rename('libs.min.css'))
 		.pipe(gulp.dest(dirs.dest.css))
 		.pipe(sassFilter.restore())
 		.pipe(fontsFilter)

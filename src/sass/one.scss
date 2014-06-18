@@ -1,4 +1,45 @@
-.oneScss{
-	display:block;
-	width:100%;
-}
+    // Only style selects for ie10 and good browsers
+    .gt-ie9 {
+     
+    // be aware: this class might change from
+    // project to project
+    .type_select {
+     
+    // the span surrounding the select
+    span {
+    display: inline-block;
+    background-position: right center;
+     
+    //add your image here
+    background-image: url( [your dropdown arrow png image] );
+    }
+     
+    select {
+     
+    // make the select styling go away
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+     
+    // fix for -moz-appearance:none; not always working
+    text-indent: 0.01px;
+    text-overflow: "";
+     
+    // fix for ie10
+    &::-ms-expand {
+    display: none;
+    }
+     
+    }
+    }
+     
+    .svg .type_select span {
+     
+    //add your image here
+    background-image:url( [your dropdown arrow svg image] );
+     
+    }
+     
+    }
