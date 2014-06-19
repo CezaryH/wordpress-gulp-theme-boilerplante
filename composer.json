@@ -1,0 +1,11 @@
+{
+    "name": "wordpress/gulpThemeboilerplate",
+    "description": "Wordpress composer timber/gulp boilerplate.",
+    "type": "composer-installer",
+    "authors": [
+        {
+            "name": "Cezary Haller",
+            "email": "cezary.haller@gmail.com"
+        }
+    ]
+}
