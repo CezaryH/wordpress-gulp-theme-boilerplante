@@ -49,7 +49,7 @@ gulp.task('php', function () {
         .pipe(gulp.dest(dirs.dest.dir));
 });
 
-gulp.task( 'css', function () {
+gulp.task( 'sass', function () {
 	// Compile all SCSS files.
 	return gulp.src( dirs.sass + '/*.scss' )
 		.pipe(p.sass({
@@ -64,7 +64,7 @@ gulp.task( 'css', function () {
 
 gulp.task("bower-files", function(){
 	var jsFilter = p.filter('**/*.js'),
-		sassFilter = p.filter('*.scss'),
+		sassFilter = p.filter('**/*.scss'),
 		fontsFilter = p.filter('**/fonts/*.*');
 
     return p.bowerFiles()
@@ -146,7 +146,7 @@ gulp.task('injectCss', function(){
 		view = gulp.src(dirs.views+'html-header.twig');
 		
 	return view
-		   //.pipe(p.inject(cssLib, {starttag: '<!-- inject:libsCss -->'}))
+		   .pipe(p.inject(cssLib, {starttag: '<!-- inject:libsCss -->'}))
 		   .pipe(p.inject(css, {starttag: '<!-- inject:css -->'}))
 		   .pipe(gulp.dest(dirs.dest.views));
 });
@@ -156,15 +156,20 @@ gulp.task( 'build', function () {
 	return p.runSequence(
 		'clean',
 		['php', 'twig'],
-		['css',	'bower-files','scripts'],
+		['sass', 'bower-files','scripts'],
 		'injectJs',
 		'injectCss',
 		['img',	'copy'],
 		function(){
 			p.util.log(p.util.colors.green('----------------- build done -----------------'));
 		}
-	)
+	);
 });
 
 gulp.task('help', p.taskListing);
-
+gulp.task('watch', function(){
+	gulp.src(dirs.controllers+'/+*.php', ['php']);
+	gulp.src(dirs.views+'/+*.twig', ['twig']);
+	gulp.src(dirs.sass+'/+*.sass', ['sass', 'injectCss']);
+	gulp.src(dirs.views+'/+*.js', ['scripts', 'injectJs']);
+});
