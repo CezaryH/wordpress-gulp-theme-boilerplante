@@ -136,7 +136,9 @@ gulp.task('injectJs', function(){
 		baseView = gulp.src(dirs.views+'scripts.twig');
 		
 	return baseView.pipe(p.inject(js, {starttag: '<!-- inject:js -->'}))
-		   .pipe(p.inject(jsLibs, {starttag: '<!-- inject:libsJS -->'}))
+		   .pipe(p.inject(jsLibs, {starttag: '<!-- inject:libsJS -->', transform: function (filepath, file, i, length) {
+				return '<script type="text/javascript" src="{{site.theme.link}}/dist/js/libs/'+ file.relative+'"></script>';
+			}}))
 		   .pipe(gulp.dest(dirs.dest.views));
 });
 
@@ -147,7 +149,9 @@ gulp.task('injectCss', function(){
 		
 	return view
 		   .pipe(p.inject(cssLib, {starttag: '<!-- inject:libsCss -->'}))
-		   .pipe(p.inject(css, {starttag: '<!-- inject:css -->'}))
+		   .pipe(p.inject(css, {starttag: '<!-- inject:css -->',  transform: function (filepath, file, i, length) {
+				return '<link rel="stylesheet" type="text/css" href="{{site.theme.link}}/dist/css/'+ file.relative+'" media="all" />';
+			}}))
 		   .pipe(gulp.dest(dirs.dest.views));
 });
 

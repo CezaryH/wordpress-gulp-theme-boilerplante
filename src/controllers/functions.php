@@ -8,6 +8,8 @@
 	class StarterSite extends TimberSite {
 
 		function __construct(){
+			Timber::$dirname = 'dist/views/';
+		
 			add_theme_support('post-formats');
 			add_theme_support('post-thumbnails');
 			add_theme_support('menus');
